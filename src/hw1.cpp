@@ -66,9 +66,9 @@ Matrix algebra::random(size_t n, size_t m, double min, double max)
         throw std::logic_error("min cannot be greater than max");
     }
 
-    // Creating a random number generator
-    std::random_device rd;
     // Creating a random number engine
+    std::random_device rd;
+    // Creating a random number generator
     std::mt19937 gen(rd());
 
     // Creating a uniform distribution
@@ -109,20 +109,25 @@ Matrix algebra::multiply(const Matrix& matrix, double c)
      * @return A matrix multiplied by a scalar number.
      */
 
+    // Returinig an empty matrix if the input matrix is empty
+    if (matrix.empty()) {
+        return Matrix {};
+    }
+
     // Creating a matrix equal to the input matrix
-    Matrix temp { matrix };
+    Matrix multiplied_matrix { matrix };
 
     // Multiplying the matrix by the scalar number
-    for (size_t i {}; i < temp.size(); i++) {
+    for (size_t i {}; i < multiplied_matrix.size(); i++) {
 
         // Multiplying each row by the scalar number
-        for (size_t j {}; j < temp[i].size(); j++) {
-            temp[i][j] = temp[i][j] * c;
+        for (size_t j {}; j < multiplied_matrix[i].size(); j++) {
+            multiplied_matrix[i][j] = multiplied_matrix[i][j] * c;
         }
     }
 
-    // Returning the temp
-    return temp;
+    // Returning the multiplied matrix
+    return multiplied_matrix;
 
 } // end of multiply by scalar number
 
@@ -154,23 +159,23 @@ Matrix algebra::multiply(const Matrix& matrix1, const Matrix& matrix2)
     }
 
     // Creating a zeros matrix with the dimenson of the multiplication matrix
-    Matrix matrix { algebra::zeros(matrix1.size(), matrix2[0].size()) };
+    Matrix multiplied_matrix { algebra::zeros(matrix1.size(), matrix2[0].size()) };
 
     // Multiplying the matrices
-    for (size_t i {}; i < matrix.size(); i++) {
+    for (size_t i {}; i < multiplied_matrix.size(); i++) {
 
         // Multiplying each row of the first matrix by the  corresponding column of the second matrix
-        for (size_t j {}; j < matrix[i].size(); j++) {
+        for (size_t j {}; j < multiplied_matrix[i].size(); j++) {
 
             // Multiplying each element by the corresponding element in the second matrix
             for (size_t k {}; k < matrix1[0].size(); k++) {
-                matrix[i][j] += matrix1[i][k] * matrix2[k][j];
+                multiplied_matrix[i][j] += matrix1[i][k] * matrix2[k][j];
             }
         }
     }
 
-    // Returning the temp
-    return matrix;
+    // Returning the multiplied matrix
+    return multiplied_matrix;
 
 } // end of multiply by matrix
 
@@ -190,19 +195,19 @@ Matrix algebra::sum(const Matrix& matrix, double c)
     }
 
     // Creating a matrix equal to the input matrix
-    Matrix temp { matrix };
+    Matrix summed_matrix { matrix };
 
     // Summing the matrix by the scalar number
-    for (size_t i {}; i < temp.size(); i++) {
+    for (size_t i {}; i < summed_matrix.size(); i++) {
 
         // Summing each row by the scalar number
-        for (size_t j {}; j < temp[i].size(); j++) {
-            temp[i][j] = temp[i][j] + c;
+        for (size_t j {}; j < summed_matrix[i].size(); j++) {
+            summed_matrix[i][j] = summed_matrix[i][j] + c;
         }
     }
 
-    // Returning the temp
-    return temp;
+    // Returning the summed matrix
+    return summed_matrix;
 
 } // end of sum by scalar number
 
@@ -221,6 +226,11 @@ Matrix algebra::sum(const Matrix& matrix1, const Matrix& matrix2)
         return Matrix {};
     }
 
+    if (matrix1.size() <= 0 || matrix2.size() <= 0 || matrix1[0].size() <= 0 || matrix2[0].size() <= 0) {
+        // Throw an exception if the number of rows or columns of matrix1
+        throw std::logic_error("The number of rows and columns of the matrices must be greater than zero");
+    }
+
     if ((matrix1.size() != matrix2.size()) || (matrix1[0].size() != matrix2[0].size())) {
         // Throw an exception if the number of rows and columns of matrix1
         // are not equal to the number of rows and columns of matrix2.
@@ -228,19 +238,19 @@ Matrix algebra::sum(const Matrix& matrix1, const Matrix& matrix2)
     }
 
     // Creating a zeros matrix equal to the dimensions of the input matrices
-    Matrix temp { algebra::zeros(matrix1.size(), matrix1[0].size()) };
+    Matrix summed_matrix { algebra::zeros(matrix1.size(), matrix1[0].size()) };
 
     // Summing the matrices
-    for (size_t i {}; i < temp.size(); i++) {
+    for (size_t i {}; i < summed_matrix.size(); i++) {
 
         // Summing each row of the first matrix by the corresponding row of the second matrix
-        for (size_t j {}; j < temp[i].size(); j++) {
-            temp[i][j] = matrix1[i][j] + matrix2[i][j];
+        for (size_t j {}; j < summed_matrix[i].size(); j++) {
+            summed_matrix[i][j] = matrix1[i][j] + matrix2[i][j];
         }
     }
 
-    // Returning the temp
-    return temp;
+    // Returning the summed matrix
+    return summed_matrix;
 
 } // end of sum by matrix
 
@@ -259,19 +269,19 @@ Matrix algebra::transpose(const Matrix& matrix)
     }
 
     // Creating a matrix with the dimensions of transpose matrix
-    Matrix temp { algebra::zeros(matrix[0].size(), matrix.size()) };
+    Matrix transposed_matrix { algebra::zeros(matrix[0].size(), matrix.size()) };
 
     // Transposing the matrix
-    for (size_t i {}; i < temp.size(); i++) {
+    for (size_t i {}; i < transposed_matrix.size(); i++) {
 
         // Transposing each row
-        for (size_t j {}; j < temp[i].size(); j++) {
-            temp[i][j] = matrix[j][i];
+        for (size_t j {}; j < transposed_matrix[i].size(); j++) {
+            transposed_matrix[i][j] = matrix[j][i];
         }
     }
 
-    // Returning the temp
-    return temp;
+    // Returning the transposed matrix
+    return transposed_matrix;
 
 } // end of transpose
 
@@ -291,22 +301,28 @@ Matrix algebra::minor(const Matrix& matrix, size_t n, size_t m)
         return Matrix {};
     }
 
+    if (n >= matrix.size() || m >= matrix[0].size()) {
+        // Throw an exception if the row or column of the minor is greater
+        // than the number of rows or columns of the matrix
+        throw std::logic_error("n and m should be less than the number of rows and columns of the matrix");
+    }
+
     // Creating a matrix with the dimensions of the minor
-    Matrix temp { algebra::zeros(matrix.size() - 1, matrix[0].size() - 1) };
+    Matrix minor_matrix { algebra::zeros(matrix.size() - 1, matrix[0].size() - 1) };
 
     // Getting the minor
-    for (size_t i {}; i < temp.size(); i++) {
+    for (size_t i {}; i < minor_matrix.size(); i++) {
 
         // Getting the minor of each row
-        for (size_t j {}; j < temp[i].size(); j++) {
+        for (size_t j {}; j < minor_matrix[i].size(); j++) {
 
             // Getting the minor of each element
-            temp[i][j] = matrix[i < n ? i : i + 1][j < m ? j : j + 1];
+            minor_matrix[i][j] = matrix[i < n ? i : i + 1][j < m ? j : j + 1];
         }
     }
 
-    // Returning the temp
-    return temp;
+    // Returning the minor matrix
+    return minor_matrix;
 
 } // end of minor
 
@@ -370,27 +386,30 @@ Matrix algebra::inverse(const Matrix& matrix)
         throw std::logic_error("non-square matrices have no inverse");
     }
 
-    if (algebra::determinant(matrix) == 0) {
+    // Defining determinant of the matrix
+    double det { algebra::determinant(matrix) };
+
+    if (det == 0) {
         // Throw an exception if the determinant of matrix is 0.
         throw std::logic_error("singular matrices have no inverse");
     }
 
     // Creating a matrix with the dimensions of the inverse
-    Matrix temp { algebra::zeros(matrix.size(), matrix[0].size()) };
+    Matrix inversed_matrix { algebra::zeros(matrix.size(), matrix[0].size()) };
 
     // Getting the inverse
-    for (size_t i {}; i < temp.size(); i++) {
+    for (size_t i {}; i < inversed_matrix.size(); i++) {
 
         // Getting the inverse of each row
-        for (size_t j {}; j < temp[i].size(); j++) {
+        for (size_t j {}; j < inversed_matrix[i].size(); j++) {
 
             // Calculating cofactor matrix
-            temp[j][i] = pow(-1, i + j) * algebra::determinant(algebra::minor(matrix, i, j));
+            inversed_matrix[j][i] = pow(-1, i + j) * algebra::determinant(algebra::minor(matrix, i, j));
         }
     }
 
-    // Returning the temp
-    return algebra::multiply(temp, (1 / (algebra::determinant(matrix))));
+    // Returning the inverse matrix
+    return algebra::multiply(inversed_matrix, (1 / det));
 
 } // end of inverse
 
@@ -473,7 +492,7 @@ Matrix algebra::ero_swap(const Matrix& matrix, size_t r1, size_t r2)
         return Matrix {};
     }
 
-    if (r1 >= matrix.size() || r2 >= matrix.size() || r1 <= 0 || r2 <= 0) {
+    if (r1 >= matrix.size() || r2 >= matrix.size() || r1 < 0 || r2 < 0) {
         // Throw an exception if the row is greater than the number of rows.
         throw std::logic_error("r1 or r2 inputs are out of range");
     }
@@ -540,7 +559,7 @@ Matrix algebra::ero_sum(const Matrix& matrix, size_t r1, double c, size_t r2)
         return Matrix {};
     }
 
-    if (r1 >= matrix.size() || r2 >= matrix.size()) {
+    if (r1 >= matrix.size() || r2 >= matrix.size() || r1 < 0 || r2 < 0) {
         // Throw an exception if the row is greater than the number of rows.
         throw std::logic_error("r1 or r2 inputs are out of range");
     }
@@ -558,41 +577,80 @@ Matrix algebra::ero_sum(const Matrix& matrix, size_t r1, double c, size_t r2)
 
 } // end of ero_sum
 
-// Header of upper triangular function
-// Matrix algebra::upper_triangular(const Matrix& matrix)
-// {
-//     /**
-//      * @brief This function returns the upper triangular matrix of a matrix.
-//      * @param matrix The matrix to find the upper triangular matrix of.
-//      * @return The upper triangular matrix of a matrix.
-//      */
+// Defining of upper triangular function
+Matrix algebra::upper_triangular(const Matrix& matrix)
+{
+    /**
+     * @brief This function returns the upper triangular matrix of a matrix.
+     * @param matrix The matrix to find the upper triangular matrix of.
+     * @return The upper triangular matrix of a matrix.
+     */
 
-//     // Returinig an empty matrix if the input matrix is empty
-//     if (matrix.empty()) {
-//         return Matrix {};
-//     }
+    // Returinig an empty matrix if the input matrix is empty
+    if (matrix.empty()) {
+        return Matrix {};
+    }
 
-//     if (matrix.size() != matrix[0].size()) {
-//         // Throw an exception if the matrix is not square.
-//         throw std::logic_error("non-square matrices have no upper triangular form");
-//     }
+    if (matrix.size() != matrix[0].size()) {
+        // Throw an exception if the matrix is not square.
+        throw std::logic_error("non-square matrices have no upper triangular form");
+    }
 
-//     // Creating a matrix with the dimensions of the input matrix
-//     Matrix upper_triangular_matrix { matrix };
+    if (matrix.size() == 1) {
+        // Return the upper triangular matrix if the matrix is 1x1.
+        return matrix;
+    }
 
-//     // Looping through the rows
-//     for (size_t j {}; j < upper_triangular_matrix.size(); j++) {
+    // Creating a matrix with the dimensions of the input matrix
+    Matrix upper_triangular_matrix { matrix };
 
-//         // Looping through the columns
-//         for (size_t i {}; j < i; i++) {
+    // Changing the place of zero elements in the diagonal
+    for (size_t i {}; i < upper_triangular_matrix.size(); i++) {
 
-//             // Checking if the element is not zero
-//             if (upper_triangular_matrix[i][j] != 0) {
+        if (upper_triangular_matrix[i][i] == 0) {
+            // Iterating through the rows to find a non-zero element in the diagonal
 
-                
-//             }
-//         }
-//     }
-//     // Returning the upper triangular matrix
-//     return upper_triangular_matrix;
-// }
+            // Iterating between the next rows to find a non-zero element
+            for (size_t j { i + 1 }; j < upper_triangular_matrix.size(); j++) {
+                if ((upper_triangular_matrix[j][i] != 0) && (upper_triangular_matrix[i][j] != 0)) {
+
+                    // Swapping the rows if a non-zero element is found
+                    upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
+                    break;
+                }
+            }
+            if (upper_triangular_matrix[i][i] == 0) {
+                // Iterating between first rows to the current row to find a non-zero element
+                for (size_t j {}; j < i + 1; j++) {
+                    if ((upper_triangular_matrix[j][i] != 0) && (upper_triangular_matrix[i][j] != 0)) {
+
+                        // Swapping the rows if a non-zero element is found
+                        upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // Looping through the rows
+    for (size_t j {}; j < upper_triangular_matrix.size(); j++) {
+
+        // Looping through the columns
+        for (size_t i { j + 1 }; i < matrix.size(); i++) {
+
+            // Checking if the element is not zero
+            if (upper_triangular_matrix[i][j] != 0) {
+
+                // Summing the rows to get the upper triangular matrix
+                upper_triangular_matrix = algebra::ero_sum(upper_triangular_matrix,
+                    j,
+                    (-upper_triangular_matrix[i][j] / upper_triangular_matrix[j][j]),
+                    i);
+            }
+        }
+    }
+
+    // Returning the upper triangular matrix
+    return upper_triangular_matrix;
+}

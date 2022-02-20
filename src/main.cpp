@@ -10,7 +10,8 @@ int main(int argc, char** argv)
         // debug section
 
         // test zeros
-        // Matrix m = Algebra::zeros(3, 4);
+        // Matrix m1 = algebra::zeros(3, 0);
+
 
         // test random
 
@@ -37,6 +38,13 @@ int main(int argc, char** argv)
         // double a { matrix1.size() };
         // std::cout<<matrix1.size()<<std::endl;
         // Matrix matrix3 = algebra::multiply(matrix1, matrix2);
+
+
+        // Matrix matrix2{{1, 2, 3}, {4, 7, 5}, {6, 1, 0}};
+
+        // Matrix matrix3 = algebra::upper_triangular(matrix2);
+        // algebra::show(matrix3);
+
 
         // algebra::show(matrix3);
 
