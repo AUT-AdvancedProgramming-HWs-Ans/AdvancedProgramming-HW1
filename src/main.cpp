@@ -5,9 +5,18 @@
 
 int main(int argc, char **argv)
 {
-    if (true) // make false to run unit-tests
+    if (false) // make false to run unit-tests
     {
         // debug section
+
+        // test zeros
+        // Matrix m = Algebra::zeros(3, 4);
+
+        // test random
+
+        Matrix m = algebra::random(3, 4, 30, 5);
+        algebra::show(m);
+        
     }
     else
     {

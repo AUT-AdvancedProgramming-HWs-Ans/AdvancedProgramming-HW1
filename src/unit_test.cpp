@@ -3,7 +3,7 @@
 #include "gmock/gmock.h"
 #include "hw1.h"
 
-/*
+
 TEST(HW1Test, ZEROS) {
     Matrix matrix{algebra::zeros(5, 6)};
 
@@ -17,6 +17,7 @@ TEST(HW1Test, ZEROS) {
             EXPECT_DOUBLE_EQ(elem, 0);
 }
 
+
 TEST(HW1Test, ONES) {
     Matrix matrix{algebra::ones(7, 3)};
 
@@ -29,6 +30,7 @@ TEST(HW1Test, ONES) {
         for (const auto& elem : row)
             EXPECT_DOUBLE_EQ(elem, 1);
 }
+
 
 TEST(HW1Test, RANDOM1) {
     using ::testing::AllOf;
@@ -52,10 +54,14 @@ TEST(HW1Test, RANDOM1) {
     std::cout << std::endl;
 }
 
+
+
+
 TEST(HW1Test, RANDOM2) {
     // Caution: min cannot be greater than max
     EXPECT_THROW(algebra::random(3, 4, 4, 2), std::logic_error);
 }
+
 
 TEST(HW1Test, MULTIPLY1) {
     Matrix matrix{algebra::random(3, 4, -4, 2)};
@@ -71,6 +77,7 @@ TEST(HW1Test, MULTIPLY1) {
             EXPECT_NEAR(mult[i][j], matrix[i][j]*3.5, 0.03);
 }
 
+/*
 TEST(HW1Test, MULTIPLY2) {
     // Caution: multiplication of 2 empty matrix
     Matrix matrix{algebra::multiply(Matrix{}, Matrix{})};
