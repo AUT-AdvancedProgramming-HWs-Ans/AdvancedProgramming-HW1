@@ -1,3 +1,9 @@
+/**
+ * This code tests the functions in hw1.cpp file.
+ * @file main.cpp
+ * @author Erfan Rasti
+ * @version 1.0.1
+ */
 
 #include "hw1.h"
 #include <gtest/gtest.h>
@@ -9,44 +15,27 @@ int main(int argc, char** argv)
     {
         // debug section
 
-        // test zeros
+        // // test zeros
         // Matrix m1 = algebra::zeros(3, 0);
 
-
-        // test random
-
-        // Matrix m = algebra::zeros(1.1,3);
-
-        // Matrix m2 =
-
+        // // test show
         //  Matrix matrix(-1, std::vector<double>(-2, 1));
-
         // algebra::show(matrix);
 
-        // algebra::show(m);
-
-        // Matrix matrix{algebra::multiply(Matrix{}, Matrix{})};
-
-        // Matrix matrix1{};
-        // int a{matrix1.size()};
-        // std::cout<<a<<std::endl;
-
+        // // test multiply
+        // Matrix matrix1{algebra::multiply(Matrix{}, Matrix{})};
+        // std::cout<<matrix1.size()<<std::endl;
         // algebra::show(matrix1);
 
-        // Matrix matrix1 {};
-        // Matrix matrix2 = algebra::ones(3, 4);
-        // double a { matrix1.size() };
-        // std::cout<<matrix1.size()<<std::endl;
-        // Matrix matrix3 = algebra::multiply(matrix1, matrix2);
+        // Matrix matrix2 {};
+        // Matrix matrix3 = algebra::ones(3, 4);
+        // std::cout<<matrix2.size()<<std::endl;
+        // Matrix matrix4 = algebra::multiply(matrix2, matrix3);
 
-
-        // Matrix matrix2{{1, 2, 3}, {4, 7, 5}, {6, 1, 0}};
-
-        // Matrix matrix3 = algebra::upper_triangular(matrix2);
-        // algebra::show(matrix3);
-
-
-        // algebra::show(matrix3);
+        // // test upper triangular
+        // Matrix matrix_test_upper_triangular{{1, 1, 1}, {0, 0, 1}, {1, 0, 1}};
+        // Matrix matrix_final_upper_triangular = algebra::upper_triangular(matrix_test_upper_triangular);
+        // algebra::show(matrix_final_upper_triangular);
 
     } else {
         ::testing::InitGoogleTest(&argc, argv);

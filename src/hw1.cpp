@@ -1,8 +1,8 @@
 /**
- * In this code we are going to implement a Linear Algebra library.
- * @file hw1.c
+ * In this code we are going to implement a linear algebra library.
+ * @file hw1.cpp
  * @author Erfan Rasti
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 // Adding libraries
@@ -38,7 +38,7 @@ Matrix algebra::ones(size_t n, size_t m)
 
     if (n <= 0 || m <= 0) {
         // Throw an exception if n and m are not greater than 0.
-        throw std::logic_error("n and m must be greater than 0.");
+        throw std::logic_error("n and m must be greater than 0");
     }
 
     return Matrix(n, std::vector<double>(m, 1));
@@ -58,7 +58,7 @@ Matrix algebra::random(size_t n, size_t m, double min, double max)
 
     if (n <= 0 || m <= 0) {
         // Throw an exception if n and m are not greater than 0.
-        throw std::logic_error("n and m must be greater than 0.");
+        throw std::logic_error("n and m must be greater than 0");
     }
 
     if (min >= max) {
@@ -122,7 +122,7 @@ Matrix algebra::multiply(const Matrix& matrix, double c)
 
         // Multiplying each row by the scalar number
         for (size_t j {}; j < multiplied_matrix[i].size(); j++) {
-            multiplied_matrix[i][j] = multiplied_matrix[i][j] * c;
+            multiplied_matrix[i][j] *= c;
         }
     }
 
@@ -446,7 +446,6 @@ Matrix algebra::concatenate(const Matrix& matrix1, const Matrix& matrix2, int ax
 
         // Returning the concatenated matrix
         return concatenated_matrix;
-
     } else if (axis == 1) {
         // Returinig an empty matrix if the input matrix is empty
         if (matrix1.empty() && matrix2.empty()) {
@@ -468,7 +467,6 @@ Matrix algebra::concatenate(const Matrix& matrix1, const Matrix& matrix2, int ax
 
         // Returning the concatenated matrix
         return algebra::transpose(concatenated_matrix);
-
     } else {
         // Throw an exception if the axis is not 0 or 1.
         throw std::logic_error("axis must be 0 or 1");
@@ -492,7 +490,7 @@ Matrix algebra::ero_swap(const Matrix& matrix, size_t r1, size_t r2)
         return Matrix {};
     }
 
-    if (r1 >= matrix.size() || r2 >= matrix.size() || r1 < 0 || r2 < 0) {
+    if (r1 >= matrix.size() || r2 >= matrix.size()) {
         // Throw an exception if the row is greater than the number of rows.
         throw std::logic_error("r1 or r2 inputs are out of range");
     }
@@ -559,7 +557,7 @@ Matrix algebra::ero_sum(const Matrix& matrix, size_t r1, double c, size_t r2)
         return Matrix {};
     }
 
-    if (r1 >= matrix.size() || r2 >= matrix.size() || r1 < 0 || r2 < 0) {
+    if (r1 >= matrix.size() || r2 >= matrix.size()) {
         // Throw an exception if the row is greater than the number of rows.
         throw std::logic_error("r1 or r2 inputs are out of range");
     }
@@ -604,34 +602,73 @@ Matrix algebra::upper_triangular(const Matrix& matrix)
     // Creating a matrix with the dimensions of the input matrix
     Matrix upper_triangular_matrix { matrix };
 
-    // Changing the place of zero elements in the diagonal
+    // Converting the matrix to a non-zero diagonal matrix
+
+    // Iterating between the rows from the top to the bottom
     for (size_t i {}; i < upper_triangular_matrix.size(); i++) {
 
+        // Finding zero diagonal element
         if (upper_triangular_matrix[i][i] == 0) {
-            // Iterating through the rows to find a non-zero element in the diagonal
 
             // Iterating between the next rows to find a non-zero element
             for (size_t j { i + 1 }; j < upper_triangular_matrix.size(); j++) {
-                if ((upper_triangular_matrix[j][i] != 0) && (upper_triangular_matrix[i][j] != 0)) {
+                if (upper_triangular_matrix[j][i] != 0) {
 
                     // Swapping the rows if a non-zero element is found
                     upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
                     break;
                 }
             }
-            if (upper_triangular_matrix[i][i] == 0) {
-                // Iterating between first rows to the current row to find a non-zero element
-                for (size_t j {}; j < i + 1; j++) {
-                    if ((upper_triangular_matrix[j][i] != 0) && (upper_triangular_matrix[i][j] != 0)) {
+        }
 
-                        // Swapping the rows if a non-zero element is found
-                        upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
-                        break;
-                    }
+        // Checking if the diagonal element is zero
+        if (upper_triangular_matrix[i][i] == 0) {
+
+            // Iterating between first rows to the current row to find a non-zero element
+            for (size_t j {}; j < i; j++) {
+                if (upper_triangular_matrix[j][i] != 0) {
+
+                    // Swapping the rows if a non-zero element is found
+                    upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
+                    break;
                 }
             }
         }
     }
+
+    // Iteraating between the rows from the down to the top
+    for (int i { static_cast<int>(upper_triangular_matrix.size()) - 1 }; i >= 0; i--) {
+
+        // Finding zero diagonal element
+        if (upper_triangular_matrix[i][i] == 0) {
+
+            // Iterating between the cuurent row and first rows to find a non-zero element
+            for (int j { i - 1 }; j >= 0; j--) {
+                if (upper_triangular_matrix[j][i] != 0) {
+
+                    // Swapping the rows if a non-zero element is found
+                    upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
+                    break;
+                }
+            }
+        }
+
+        // Checking if the diagonal element is zero
+        if (upper_triangular_matrix[i][i] == 0) {
+
+            // Iterating between the last row to the current row to find a non-zero element
+            for (size_t j { upper_triangular_matrix.size() - 1 }; j > i; j--) {
+                if (upper_triangular_matrix[j][i] != 0) {
+
+                    // Swapping the rows if a non-zero element is found
+                    upper_triangular_matrix = algebra::ero_swap(upper_triangular_matrix, i, j);
+                    break;
+                }
+            }
+        }
+    }
+
+    // Converting the matrix to an upper triangular matrix
 
     // Looping through the rows
     for (size_t j {}; j < upper_triangular_matrix.size(); j++) {

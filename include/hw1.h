@@ -1,3 +1,10 @@
+/**
+ * This code is list of headers that are used in hw1.cpp file.
+ * @file hw1.h
+ * @author Erfan Rasti
+ * @version 1.0.1
+ */
+
 #ifndef AP_HW1_H
 #define AP_HW1_H
 #endif // AP_HW1_H
