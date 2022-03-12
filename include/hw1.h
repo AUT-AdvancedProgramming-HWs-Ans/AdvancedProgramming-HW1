@@ -2,12 +2,11 @@
  * This code is list of headers that are used in hw1.cpp file.
  * @file hw1.h
  * @author Erfan Rasti
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 #ifndef AP_HW1_H
 #define AP_HW1_H
-#endif // AP_HW1_H
 
 // Defining libraries
 #include <iomanip>
@@ -72,3 +71,5 @@ Matrix ero_sum(const Matrix& matrix, size_t r1, double c, size_t r2);
 Matrix upper_triangular(const Matrix& matrix);
 
 } // end of namespace algebra
+
+#endif // AP_HW1_H

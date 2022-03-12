@@ -2,7 +2,7 @@
  * This code tests the functions in hw1.cpp file.
  * @file main.cpp
  * @author Erfan Rasti
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 #include "hw1.h"
@@ -36,6 +36,10 @@ int main(int argc, char** argv)
         // Matrix matrix_test_upper_triangular{{1, 1, 1}, {0, 0, 1}, {1, 0, 1}};
         // Matrix matrix_final_upper_triangular = algebra::upper_triangular(matrix_test_upper_triangular);
         // algebra::show(matrix_final_upper_triangular);
+
+        // test random matrix
+        // Matrix matrix_test_random = algebra::random(3, 3, -1, 1);
+        // algebra::show(matrix_test_random);
 
     } else {
         ::testing::InitGoogleTest(&argc, argv);

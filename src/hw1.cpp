@@ -2,7 +2,7 @@
  * In this code we are going to implement a linear algebra library.
  * @file hw1.cpp
  * @author Erfan Rasti
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 // Adding libraries
@@ -24,6 +24,7 @@ Matrix algebra::zeros(size_t n, size_t m)
     }
 
     return Matrix(n, std::vector<double>(m, 0));
+
 } // end of zeros
 
 // Defining ones function
@@ -74,8 +75,17 @@ Matrix algebra::random(size_t n, size_t m, double min, double max)
     // Creating a uniform distribution
     std::uniform_real_distribution<double> dist(min, max);
 
+    // Defining the random matrix
+    Matrix random_matrix(n, std::vector<double>(m));
     // Creating a matrix of random numbers
-    return Matrix(n, std::vector<double>(m, dist(gen)));
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < m; j++) {
+            random_matrix[i][j] = dist(gen);
+        }
+    }
+
+    // Returning the random matrix
+    return random_matrix;
 
 } // end of random
 
@@ -437,15 +447,39 @@ Matrix algebra::concatenate(const Matrix& matrix1, const Matrix& matrix2, int ax
         }
 
         // Creating concatenated matrix
-        Matrix concatenated_matrix { matrix1 };
+        Matrix concatenated_matrix { algebra::zeros(matrix1.size() + matrix2.size(),
+            matrix1[0].size()) };
 
-        // Appending the second matrix to the first
+        // Appending the first matrix
+        for (size_t i {}; i < matrix1.size(); i++) {
+            for (size_t j {}; j < matrix1[i].size(); j++) {
+                concatenated_matrix[i][j] = matrix1[i][j];
+            }
+        }
+
+        // Appending the second matrix
         for (size_t i {}; i < matrix2.size(); i++) {
-            concatenated_matrix.push_back(matrix2[i]);
+
+            for (size_t j {}; j < matrix2[i].size(); j++) {
+                concatenated_matrix[i + matrix1.size()][j] = matrix2[i][j];
+            }
         }
 
         // Returning the concatenated matrix
         return concatenated_matrix;
+
+        // Method 2:
+        // // Creating concatenated matrix
+        // Matrix concatenated_matrix { matrix1 };
+
+        // // Appending the second matrix to the first
+        // for (size_t i {}; i < matrix2.size(); i++) {
+        //     concatenated_matrix.push_back(matrix2[i]);
+        // }
+
+        // // Returning the concatenated matrix
+        // return concatenated_matrix;
+
     } else if (axis == 1) {
         // Returinig an empty matrix if the input matrix is empty
         if (matrix1.empty() && matrix2.empty()) {
@@ -458,15 +492,38 @@ Matrix algebra::concatenate(const Matrix& matrix1, const Matrix& matrix2, int ax
         }
 
         // Creating concatenated matrix
-        Matrix concatenated_matrix { algebra::transpose(matrix1) };
+        Matrix concatenated_matrix { algebra::zeros(matrix1.size(),
+            matrix1[0].size() + matrix2[0].size()) };
 
-        // Appending the second matrix to the first
-        for (size_t i {}; i < matrix2[0].size(); i++) {
-            concatenated_matrix.push_back(algebra::transpose(matrix2)[i]);
+        // Appending the first matrix
+        for (size_t j {}; j < matrix1[0].size(); j++) {
+            for (size_t i {}; i < matrix1.size(); i++) {
+                concatenated_matrix[i][j] = matrix1[i][j];
+            }
+        }
+
+        // Appending the second matrix
+        for (size_t j {}; j < matrix2[0].size(); j++) {
+            for (size_t i {}; i < matrix2.size(); i++) {
+                concatenated_matrix[i][j + matrix1[0].size()] = matrix2[i][j];
+            }
         }
 
         // Returning the concatenated matrix
-        return algebra::transpose(concatenated_matrix);
+        return concatenated_matrix;
+
+        // Method 2:
+        // // Creating concatenated matrix
+        // Matrix concatenated_matrix { algebra::transpose(matrix1) };
+
+        // // Appending the second matrix to the first
+        // for (size_t i {}; i < matrix2[0].size(); i++) {
+        //     concatenated_matrix.push_back(algebra::transpose(matrix2)[i]);
+        // }
+
+        // // Returning the concatenated matrix
+        // return algebra::transpose(concatenated_matrix);
+
     } else {
         // Throw an exception if the axis is not 0 or 1.
         throw std::logic_error("axis must be 0 or 1");
